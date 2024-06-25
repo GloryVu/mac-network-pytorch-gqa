@@ -26,7 +26,7 @@ n_answers = len(dic['answer_dic'])
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 net = MACNetwork(n_words, 2048, classes=n_answers, max_step=4).to(device)
 net.eval()
-net = net.load_state_dict(torch.load(sys.argv[2]), strict=False)
+net.load_state_dict(torch.load(sys.argv[2]), strict=False)
 
 for epoch in range(n_epoch):
     dataset = iter(train_set)
