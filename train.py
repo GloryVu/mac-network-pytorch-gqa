@@ -13,7 +13,7 @@ from model_gqa import MACNetwork
 
 batch_size = 128
 n_epoch = 25
-dim_dict = {'CLEVR': 512,
+dim_dict = {'CLEVR': 2048,
             'gqa': 2048}
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
