@@ -39,11 +39,11 @@ for epoch in range(n_epoch):
         image, question = image.to(device), question.to(device)
         output = net(image, question, q_len)
         correct = output.detach().argmax(1) == answer.to(device)
-        for c in correct:
+        for c, cl in zip(correct,cluster):
             if c:
-                acc_by_cluster[cluster]['correct_counts']+=1
+                acc_by_cluster[cl]['correct_counts']+=1
                 correct_counts += 1
-            acc_by_cluster[cluster]['total_counts']+=1
+            acc_by_cluster[cl]['total_counts']+=1
             total_counts += 1
 
     print('Avg Acc: {:.5f}'.format(correct_counts / total_counts))
