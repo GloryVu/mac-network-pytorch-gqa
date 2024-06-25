@@ -36,7 +36,7 @@ for epoch in range(n_epoch):
             if c:
                 acc_by_cluster[cluster]['correct_counts']+=1
                 correct_counts += 1
-            acc_by_cluster[cluster]['total_counts']
+            acc_by_cluster[cluster]['total_counts']+=1
             total_counts += 1
 
     print('Avg Acc: {:.5f}'.format(correct_counts / total_counts))
