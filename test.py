@@ -26,15 +26,20 @@ for epoch in range(n_epoch):
     pbar = tqdm(dataset)
     correct_counts = 0
     total_counts = 0
-
-    for image, question, q_len, answer in pbar:
+    acc_by_cluster=[{'total_counts':0,
+                     'correct_counts':0} for _ in range(6)]
+    for image, question, q_len, answer, cluster in pbar:
         image, question = image.to(device), question.to(device)
         output = net(image, question, q_len)
         correct = output.detach().argmax(1) == answer.to(device)
         for c in correct:
             if c:
+                acc_by_cluster[cluster]['correct_counts']+=1
                 correct_counts += 1
+            acc_by_cluster[cluster]['total_counts']
             total_counts += 1
 
     print('Avg Acc: {:.5f}'.format(correct_counts / total_counts))
-
+    print('Avg Acc by cluster:')
+    for cluster in acc_by_cluster:
+        print('{}: {:.5f}'.format(cluster,cluster['correct_counts'] / cluster['total_counts']))
