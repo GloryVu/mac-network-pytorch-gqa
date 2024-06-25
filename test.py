@@ -17,7 +17,7 @@ train_set = DataLoader(
     collate_fn=collate_data,
 )
 dataset_type = sys.argv[1]
-with open(f'data/{dataset_type}_dic.pkl', 'rb') as f:
+with open(f'data/train_dic.pkl', 'rb') as f:
     dic = pickle.load(f)
 
 n_words = len(dic['word_dic']) + 1
