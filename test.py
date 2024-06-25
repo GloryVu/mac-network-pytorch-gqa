@@ -17,7 +17,7 @@ train_set = DataLoader(
     collate_fn=collate_data,
 )
 dataset_type = sys.argv[1]
-with open(f'data/train_dic.pkl', 'rb') as f:
+with open(f'data/{dataset_type}_dic.pkl', 'rb') as f:
     dic = pickle.load(f)
 
 n_words = len(dic['word_dic']) + 1
@@ -26,7 +26,7 @@ n_answers = len(dic['answer_dic'])
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 net = MACNetwork(n_words, 2048, classes=n_answers, max_step=4).to(device)
 net.eval()
-net = net.load_state_dict(torch.load(sys.argv[2]))
+net = net.load_state_dict(torch.load(sys.argv[2]), strict=False)
 
 for epoch in range(n_epoch):
     dataset = iter(train_set)
