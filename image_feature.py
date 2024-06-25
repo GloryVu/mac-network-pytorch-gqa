@@ -9,7 +9,8 @@ import os
 from PIL import Image
 from tqdm import tqdm
 from torch.autograd import Variable
-
+import json
+os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def forward(self, x):
@@ -33,15 +34,13 @@ transform = transforms.Compose([
 class CLEVR(Dataset):
     def __init__(self, root, split='train'):
         self.root = root
-        self.split = split
         self.length = len(os.listdir(os.path.join(root,
-                                                'images', split)))
-
+                                                'images')))
+        with open(f'{root}/data.json',encoding='utf-8') as f:
+            samples = json.load(f)
+        self.images = [os.path.join(root,'images',sample['image_name']) for sample in samples]
     def __getitem__(self, index):
-        img = os.path.join(self.root, 'images',
-                        self.split,
-                        'CLEVR_{}_{}.png'.format(self.split,
-                                            str(index).zfill(6)))
+        img = self.images[index]
         img = Image.open(img).convert('RGB')
         return transform(img)
 
@@ -62,7 +61,7 @@ def create_dataset(split):
 
     print(split, 'total', size * batch_size)
 
-    f = h5py.File('data/CLEVR_{}_features.hdf5'.format(split), 'w', libver='latest')
+    f = h5py.File(f'data/CLEVR_features.hdf5', 'w', libver='latest')
     dset = f.create_dataset('data', (size * batch_size, 1024, 14, 14),
                             dtype='f4')
 
@@ -74,5 +73,5 @@ def create_dataset(split):
 
     f.close()
 
-create_dataset('val')
+# create_dataset('val')
 create_dataset('train')

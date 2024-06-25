@@ -9,7 +9,7 @@ from torchvision import transforms
 from PIL import Image
 from transforms import Scale
 
-image_index = {'CLEVR': 'image_filename',
+image_index = {'CLEVR': 'image_name',
                'gqa': 'imageId'}
 
 
@@ -20,36 +20,37 @@ def process_question(root, split, word_dic=None, answer_dic=None, dataset_type='
     if answer_dic is None:
         answer_dic = {}
 
-    with open(os.path.join(root, 'questions', f'{dataset_type}_{split}_questions.json')) as f:
+    with open(os.path.join(root, f'{split}.json')) as f:
         data = json.load(f)
 
     result = []
     word_index = 1
     answer_index = 0
 
-    for question in tqdm.tqdm(data['questions']):
-        words = nltk.word_tokenize(question['question'])
-        question_token = []
+    for sample in tqdm.tqdm(data):
+        for question, answer in zip(sample['questions'], sample['answers']):
+            words = nltk.word_tokenize(question['question'])
+            question_token = []
 
-        for word in words:
+            for word in words:
+                try:
+                    question_token.append(word_dic[word])
+
+                except:
+                    question_token.append(word_index)
+                    word_dic[word] = word_index
+                    word_index += 1
+
+            answer_word = answer['answer']
+
             try:
-                question_token.append(word_dic[word])
-
+                answer = answer_dic[answer_word]
             except:
-                question_token.append(word_index)
-                word_dic[word] = word_index
-                word_index += 1
+                answer = answer_index
+                answer_dic[answer_word] = answer_index
+                answer_index += 1
 
-        answer_word = question['answer']
-
-        try:
-            answer = answer_dic[answer_word]
-        except:
-            answer = answer_index
-            answer_dic[answer_word] = answer_index
-            answer_index += 1
-
-        result.append((question[image_index[dataset_type]], question_token, answer))
+            result.append((sample['image_id'], question_token, answer,question['cluster']))
 
     with open(f'data/{dataset_type}_{split}.pkl', 'wb') as f:
         pickle.dump(result, f)

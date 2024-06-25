@@ -33,19 +33,14 @@ class CLEVR(Dataset):
         self.root = root
         self.split = split
 
-        self.h = h5py.File('data/CLEVR_{}_features.hdf5'.format(split), 'r')
+        self.h = h5py.File('data/CLEVR_features.hdf5'.format(split), 'r')
         self.img = self.h['data']
 
     def close(self):
         self.h.close()
 
     def __getitem__(self, index):
-        imgfile, question, answer = self.data[index]
-        # img = Image.open(os.path.join(self.root, 'images',
-        #                            self.split, imgfile)).convert('RGB')
-
-        # img = self.transform(img)
-        id = int(imgfile.rsplit('_', 1)[1][:-4])
+        id, question, answer,_ = self.data[index]
         img = torch.from_numpy(self.img[id])
 
         return img, question, len(question), answer

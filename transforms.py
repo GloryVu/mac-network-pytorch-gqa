@@ -1,7 +1,7 @@
 """ Shamelessly take from newer torchvision repository """
 
 from PIL import Image
-import collections
+import collections.abc as collections
 
 class Scale(object):
     """Rescale the input PIL.Image to the given size.
