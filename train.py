@@ -114,7 +114,7 @@ def valid(epoch, dataset_type):
     print('Validation Loss: {:.8f}'.format(running_loss / total_counts))
 
     dataset_object.close()
-
+    return correct_counts / batches_done
 
 if __name__ == '__main__':
     dataset_type = sys.argv[1]
@@ -130,10 +130,11 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=1e-4)
-
+    curr_val_acc = 0
     for epoch in range(n_epoch):
         train(epoch, dataset_type)
-        valid(epoch, dataset_type)
-
-        with open('checkpoint/checkpoint_{}.model'.format(str(epoch + 1).zfill(2)), 'wb') as f:
+        acc = valid(epoch, dataset_type)
+        if acc > curr_val_acc:
+            curr_val_acc==acc
+        with open('checkpoint/best.model', 'wb') as f:
             torch.save(net_running.state_dict(), f)
