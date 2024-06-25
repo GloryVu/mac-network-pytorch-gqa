@@ -69,8 +69,10 @@ def create_dataset(split):
         for i, image in tqdm(enumerate(dataloader)):
             image = image.to(device)
             features = resnet(image).detach().cpu().numpy()
-            dset[i * batch_size:(i + 1) * batch_size] = features
-
+            try:
+                dset[i * batch_size:(i + 1) * batch_size] = features
+            except:
+                dset[i * batch_size:i * batch_size+features.shape[0]] = features
     f.close()
 
 # create_dataset('val')
