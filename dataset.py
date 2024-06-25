@@ -40,7 +40,7 @@ class CLEVR(Dataset):
         self.h.close()
 
     def __getitem__(self, index):
-        id, question, answer,cluster = self.data[index]
+        id, question, answer, cluster = self.data[index]
         img = torch.from_numpy(self.img[id])
 
         return img, question, len(question), answer,cluster
@@ -76,7 +76,7 @@ transform = transforms.Compose([
 ])
 
 def collate_data(batch):
-    images, lengths, answers = [], [], []
+    images, lengths, answers, clusters = [], [], []
     batch_size = len(batch)
 
     max_len = max(map(lambda x: len(x[1]), batch))
@@ -85,12 +85,12 @@ def collate_data(batch):
     sort_by_len = sorted(batch, key=lambda x: len(x[1]), reverse=True)
 
     for i, b in enumerate(sort_by_len):
-        image, question, length, answer = b
+        image, question, length, answer, cluster = b
         images.append(image)
         length = len(question)
         questions[i, :length] = question
         lengths.append(length)
         answers.append(answer)
-
+        clusters.append(cluster)
     return torch.stack(images), torch.from_numpy(questions), \
-        lengths, torch.LongTensor(answers)
+        lengths, torch.LongTensor(answers), clusters
