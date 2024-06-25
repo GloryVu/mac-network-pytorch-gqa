@@ -31,7 +31,7 @@ def get_or_load_embeddings():
     embedding_weights = np.random.normal(0, scale=sd, size=[vocab_size, embed_size])
     embedding_weights = embedding_weights.astype(np.float32)
 
-    with open("data/word2vec_vi_words_300dims.txt", encoding="utf-8", mode="r") as textFile:
+    with open("/kaggle/input/phow2v/word2vec_vi_words_300dims.txt", encoding="utf-8", mode="r") as textFile:
         for line in textFile:
             line = line.split()
             try:
