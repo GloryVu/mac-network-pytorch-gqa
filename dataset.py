@@ -40,10 +40,10 @@ class CLEVR(Dataset):
         self.h.close()
 
     def __getitem__(self, index):
-        id, question, answer,_ = self.data[index]
+        id, question, answer,cluster = self.data[index]
         img = torch.from_numpy(self.img[id])
 
-        return img, question, len(question), answer
+        return img, question, len(question), answer,cluster
 
     def __len__(self):
         return len(self.data)
