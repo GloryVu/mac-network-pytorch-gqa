@@ -76,7 +76,7 @@ transform = transforms.Compose([
 ])
 
 def collate_data(batch):
-    images, lengths, answers, clusters = [], [], []
+    images, lengths, answers, clusters = [], [], [], []
     batch_size = len(batch)
 
     max_len = max(map(lambda x: len(x[1]), batch))
