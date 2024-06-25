@@ -18,7 +18,7 @@ def gqa_feature_loader():
     if img is not None:
         return img, img_info
 
-    h = h5py.File('data/gqa_features.hdf5', 'r')
+    h = h5py.File('data/a.hdf5', 'r')
     img = h['features']
     img_info = json.load(open('data/gqa_objects_merged_info.json', 'r'))
     return img, img_info
