@@ -14,14 +14,18 @@ image_index = {'CLEVR': 'image_name',
 
 
 def process_question(root, split, word_dic=None, answer_dic=None, dataset_type='CLEVR'):
+    
     if word_dic is None:
         word_dic = {}
 
     if answer_dic is None:
         answer_dic = {}
-
-    with open(os.path.join(root, f'{split}.json')) as f:
-        data = json.load(f)
+    if split == 'val':
+        with open(os.path.join(root, f'test.json')) as f:
+            data = json.load(f)
+    else:
+        with open(os.path.join(root, f'{split}.json')) as f:
+            data = json.load(f)
 
     result = []
     word_index = 1
