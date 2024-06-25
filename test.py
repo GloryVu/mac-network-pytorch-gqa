@@ -6,7 +6,7 @@ import torch
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 from dataset import CLEVR, collate_data, transform
-
+from model_gqa import MACNetwork
 batch_size = 64
 n_epoch = 180
 
@@ -16,11 +16,17 @@ train_set = DataLoader(
     num_workers=4,
     collate_fn=collate_data,
 )
-net = torch.load(sys.argv[2])
-net.eval()
+dataset_type = sys.argv[1]
+with open(f'data/{dataset_type}_dic.pkl', 'rb') as f:
+    dic = pickle.load(f)
+
+n_words = len(dic['word_dic']) + 1
+n_answers = len(dic['answer_dic'])
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+net = MACNetwork(n_words, 2048, classes=n_answers, max_step=4).to(device)
+net = net.load_state_dict(torch.load(sys.argv[2]))
+net.eval()
 for epoch in range(n_epoch):
     dataset = iter(train_set)
     pbar = tqdm(dataset)
