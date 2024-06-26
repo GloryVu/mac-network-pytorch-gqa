@@ -87,7 +87,7 @@ def valid(epoch, dataset_type):
     batches_done = 0
     with torch.no_grad():
         pbar = tqdm(dataset)
-        for image, question, q_len, answer in pbar:
+        for image, question, q_len, answer, cluster in pbar:
             image, question, answer = (
                 image.to(device),
                 question.to(device),
