@@ -42,7 +42,7 @@ def train(epoch, dataset_type):
     moving_loss = 0
 
     net.train(True)
-    for image, question, q_len, answer in pbar:
+    for image, question, q_len, answer, _ in pbar:
         image, question, answer = (
             image.to(device),
             question.to(device),
@@ -136,5 +136,5 @@ if __name__ == '__main__':
         acc = valid(epoch, dataset_type)
         if acc > curr_val_acc:
             curr_val_acc==acc
-        with open('checkpoint/best.model', 'wb') as f:
-            torch.save(net_running.state_dict(), f)
+            with open('checkpoint/best.model', 'wb') as f:
+                torch.save(net_running.state_dict(), f)

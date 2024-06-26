@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from dataset import CLEVR, collate_data, transform
 from model_gqa import MACNetwork
 batch_size = 64
-n_epoch = 180
+n_epoch = 1
 
 train_set = DataLoader(
     CLEVR(sys.argv[1], 'val', transform=None),
