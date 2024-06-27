@@ -11,8 +11,8 @@ from tqdm import tqdm
 from dataset import CLEVR, collate_data, transform, GQA
 from model_gqa import MACNetwork
 
-batch_size = 128
-n_epoch = 100
+batch_size = 64
+n_epoch = 50
 dim_dict = {'CLEVR': 2048,
             'gqa': 2048}
 
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     accumulate(net_running, net, 0)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(net.parameters(), lr=1e-4)
+    optimizer = optim.Adam(net.parameters(), lr=3e-4)
     curr_val_acc = 0
     for epoch in range(n_epoch):
         train(epoch, dataset_type)
