@@ -135,6 +135,6 @@ if __name__ == '__main__':
         train(epoch, dataset_type)
         acc = valid(epoch, dataset_type)
         if acc > curr_val_acc:
-            curr_val_acc==acc
+            curr_val_acc=acc
             with open('checkpoint/best.model', 'wb') as f:
                 torch.save(net_running.state_dict(), f)
