@@ -129,7 +129,7 @@ if __name__ == '__main__':
     accumulate(net_running, net, 0)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(net.parameters(), lr=1e-4)
+    optimizer = optim.Adam(net.parameters(), lr=2e-4)
     curr_val_acc = 0
     for epoch in range(n_epoch):
         train(epoch, dataset_type)
