@@ -63,7 +63,7 @@ def process_question(root, split, word_dic=None, answer_dic=None, dataset_type='
 
         result.append((question[image_index[dataset_type]], question_token, answer))
 
-    with open(f'data/{dataset_type}_{split}.pkl', 'wb') as f:
+    with open(f'data/{dataset_type}_{split}_{lang}.pkl', 'wb') as f:
         pickle.dump(result, f)
 
     return word_dic, answer_dic
