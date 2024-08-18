@@ -29,16 +29,18 @@ def process_question(root, split, word_dic=None, answer_dic=None, dataset_type='
     answer_index = 0
 
     for question in tqdm.tqdm(data['questions']):
-        if lang in ['en', 'vi']:
+        if lang == 'en':
             words = nltk.word_tokenize(question['question'])
+        elif lang =='vi':
+            words = nltk.word_tokenize(question['translated']['vietnamese'])
         elif lang == 'zh':
-            words = jieba.lcut(question['question'])
+            words = jieba.lcut(question['translated']['chinese'])
         elif lang == 'ja':
             mecab = MeCab.Tagger("-Owakati")
-            words = mecab.parse(question['question']).strip().split()
+            words = mecab.parse(question['translated']['japanese']).strip().split()
         elif lang == 'ko':
             okt = Okt()
-            words = okt.morphs(question['question'])
+            words = okt.morphs(question['translated']['korean'])
         question_token = []
 
         for word in words:

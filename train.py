@@ -136,5 +136,5 @@ if __name__ == '__main__':
         train(epoch, dataset_type,lang=lang)
         valid(epoch, dataset_type,lang=lang)
 
-        with open('checkpoint/checkpoint_{}.model'.format(str(epoch + 1).zfill(2)), 'wb') as f:
+        with open(f'checkpoint/checkpoint_{lang}.model'.format(str(epoch + 1).zfill(2)), 'wb') as f:
             torch.save(net_running.state_dict(), f)
