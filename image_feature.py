@@ -62,7 +62,7 @@ def create_dataset(split):
 
     print(split, 'total', size * batch_size)
 
-    f = h5py.File('data/CLEVR_{}_features.hdf5'.format(split), 'w', libver='latest')
+    f = h5py.File('data/CLEVR_features.hdf5'.format(split), 'w', libver='latest')
     dset = f.create_dataset('data', (size * batch_size, 1024, 14, 14),
                             dtype='f4')
 
@@ -70,7 +70,10 @@ def create_dataset(split):
         for i, image in tqdm(enumerate(dataloader)):
             image = image.to(device)
             features = resnet(image).detach().cpu().numpy()
-            dset[i * batch_size:(i + 1) * batch_size] = features
+            try:
+                dset[i * batch_size:(i + 1) * batch_size] = features
+            except:
+                dset[i * batch_size:i * batch_size+features.shape[0]] = features
 
     f.close()
 
