@@ -178,7 +178,7 @@ class MACUnit(nn.Module):
 class MACNetwork(nn.Module):
     def __init__(self, n_vocab, dim, embed_hidden=300,
                 max_step=12, self_attention=False, memory_gate=False,
-                classes=28, dropout=0.15):
+                classes=28, dropout=0.15, lang='en'):
         super().__init__()
 
         self.conv = nn.Sequential(nn.Conv2d(1024, dim, 3, padding=1),
@@ -187,7 +187,7 @@ class MACNetwork(nn.Module):
                                 nn.ELU())
 
         self.embed = nn.Embedding(n_vocab, embed_hidden)
-        self.embed.weight.data = torch.Tensor(get_or_load_embeddings())
+        self.embed.weight.data = torch.Tensor(get_or_load_embeddings(lang=lang))
         self.embed.weight.requires_grad = False
         self.lstm = nn.LSTM(embed_hidden, dim,
                         batch_first=True, bidirectional=True)
