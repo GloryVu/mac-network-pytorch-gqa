@@ -53,12 +53,12 @@ class ReadUnit(nn.Module):
         self.mem = linear(dim, dim)
         self.concat = linear(dim * 2, dim)
         self.attn = linear(dim, 1)
-        self.tucker = Tucker((512, 512), 1, mm_dim=50, shared=True)
+        self.tucker = Tucker((512, 2048), 1, mm_dim=50, shared=True)
 
     def forward(self, memory, know, control):
         mem = self.mem(memory[-1]).unsqueeze(2)
         s_matrix = (mem * know)
-        s_matrix = s_matrix.view(-1, 512)
+        s_matrix = s_matrix.view(-1, 2048)
         attn = self.tucker([s_matrix, control[-1].repeat(know.size(2), 1)]).view(know.size(2), know.size(0))
         attn = attn.transpose(0, 1)
         attn = F.softmax(attn, 1).unsqueeze(1)
