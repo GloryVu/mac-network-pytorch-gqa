@@ -119,7 +119,7 @@ def valid(epoch, dataset_type,lang='en'):
 if __name__ == '__main__':
     dataset_type = sys.argv[1]
     lang = sys.argv[2]
-    with open(f'data/{dataset_type}_dic.pkl', 'rb') as f:
+    with open(f'data/{dataset_type}_dic_{lang}.pkl', 'rb') as f:
         dic = pickle.load(f)
 
     n_words = len(dic['word_dic']) + 1
