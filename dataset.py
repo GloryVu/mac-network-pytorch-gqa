@@ -32,8 +32,12 @@ class CLEVR(Dataset):
         # self.transform = transform
         self.root = root
         self.split = split
-        with open(f'/kaggle/input/multi-lingual-clevr/CLEVR/questions/mini_CLEVR_{split}_questions_translated.json') as f:
-            data = json.load(f)
+        if split == 'train':
+            with open(f'/kaggle/input/multi-lingual-clevr/CLEVR/questions/mini_CLEVR_{split}_questions_translated.json') as f:
+                data = json.load(f)
+        else:
+            with open(f'/kaggle/input/multi-lingual-clevr/CLEVR/questions/mini_CLEVR_{split}_questions_translated.json') as f:
+                data = json.load(f)
         self.img_idx_map = {}
         i=0
         for question in data['questions']:
