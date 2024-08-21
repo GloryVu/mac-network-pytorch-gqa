@@ -38,7 +38,7 @@ class CLEVR(Dataset):
         self.length = len(os.listdir(os.path.join(root,
                                                 'images', split)))
 
-        with open(f'mini_CLEVR_{split}_questions_translated.json') as f:
+        with open(f'{root}/question/mini_CLEVR_{split}_questions_translated.json') as f:
             data = json.load(f)
         self.img_idx_map = {}
         i=0
