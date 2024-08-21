@@ -26,7 +26,7 @@ def get_or_load_embeddings(lang='en'):
         return embedding_weights
 
     dataset_type = sys.argv[1]
-    with open(f'data/{dataset_type}_dic.pkl', 'rb') as f:
+    with open(f'data/{dataset_type}_{lang}dic.pkl', 'rb') as f:
         dic = pickle.load(f)
 
     id2word = set(dic['word_dic'].keys())
