@@ -58,7 +58,7 @@ class ReadUnit(nn.Module):
     def forward(self, memory, know, control):
         mem = self.mem(memory[-1]).unsqueeze(2)
         s_matrix = (mem * know)
-        s_matrix = s_matrix.view(-1, 2048)
+        s_matrix = s_matrix.view(-1, 512)
         attn = self.tucker([s_matrix, control[-1].repeat(know.size(2), 1)]).view(know.size(2), know.size(0))
         attn = attn.transpose(0, 1)
         attn = F.softmax(attn, 1).unsqueeze(1)
