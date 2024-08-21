@@ -33,10 +33,10 @@ class CLEVR(Dataset):
         self.root = root
         self.split = split
         if split == 'train':
-            with open(f'/kaggle/input/multi-lingual-clevr/CLEVR/questions/mini_CLEVR_{split}_questions_translated.json') as f:
+            with open(f'/kaggle/input/multi-lingual-clevr/mini_CLEVR_{split}_questions_translated.json') as f:
                 data = json.load(f)
         else:
-            with open(f'/kaggle/input/multi-lingual-clevr/CLEVR/questions/mini_CLEVR_{split}_questions_translated.json') as f:
+            with open(f'/kaggle/input/multi-lingual-clevr/CLEVR/CLEVR/questions/mini_CLEVR_{split}_questions_translated.json') as f:
                 data = json.load(f)
         self.img_idx_map = {}
         i=0
