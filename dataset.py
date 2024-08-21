@@ -32,13 +32,13 @@ class CLEVR(Dataset):
         # self.transform = transform
         self.root = root
         self.split = split
-        with open(f'mini_CLEVR_{split}_questions_translated.json') as f:
+        with open(f'{root}/questions/mini_CLEVR_{split}_questions_translated.json') as f:
             data = json.load(f)
         self.img_idx_map = {}
         i=0
         for question in data['questions']:
             if question['image_index'] not in self.img_idx_map.keys():
-                image_idx_map[question['image_index']] = i
+                self.img_idx_map[question['image_index']] = i
                 i+=1
         self.idx_img_map = {v:k for k,v in self.img_idx_map.items()}
         self.h = h5py.File(f'data/CLEVR_features.hdf5'.format(split), 'r')
