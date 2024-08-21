@@ -73,8 +73,8 @@ if __name__ == '__main__':
     dataset_type = sys.argv[1]
     root = sys.argv[2]
     lang = sys.argv[3]
-    word_dic, answer_dic = process_question(root, 'train', dataset_type=dataset_type)
-    process_question(root, 'val', word_dic, answer_dic, dataset_type=dataset_type)
+    word_dic, answer_dic = process_question(root, 'train', dataset_type=dataset_type, lang=lang)
+    process_question(root, 'val', word_dic, answer_dic, dataset_type=dataset_type, lang=lang)
 
     with open(f'data/{dataset_type}_{lang}_dic.pkl', 'wb') as f:
         pickle.dump({'word_dic': word_dic, 'answer_dic': answer_dic}, f)
