@@ -49,7 +49,7 @@ def get_or_load_embeddings(lang='en'):
                 if id is not None:
                     embedding_weights[id] = np.array(line[1:], dtype=np.float32)
     elif lang == 'vi':
-        with open("/kaggle/input/phow2v/word2vec_vi_words_300dims.txt", encoding="utf-8", mode="r") as textFile:
+        with open("/kaggle/input/phow2v/word2vec_vi_words_300dims/word2vec_vi_words_300dims.txt", encoding="utf-8", mode="r") as textFile:
             for line in textFile:
                 line = line.split()
                 try:
