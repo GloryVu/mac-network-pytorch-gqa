@@ -40,14 +40,13 @@ class CLEVR(Dataset):
 
         with open(f'{root}/questions/mini_CLEVR_{split}_questions_translated.json') as f:
             data = json.load(f)
-        self.img_idx_map = {}
         i=0
         self.image_idx_map = {}
         for question in data['questions']:
-            if question['image_index'] not in self.img_idx_map.keys():
+            if question['image_index'] not in self.image_idx_map.keys():
                 self.image_idx_map[question['image_index']] = i
                 i+=1
-        self.idx_img_map = {v:k for k,v in self.img_idx_map.items()}
+        self.idx_img_map = {v:k for k,v in self.image_idx_map.items()}
 
     def __getitem__(self, index):
         img = os.path.join(self.root, 'images',
