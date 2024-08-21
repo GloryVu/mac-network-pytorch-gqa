@@ -107,14 +107,14 @@ def valid(epoch, dataset_type,lang='en'):
 
             pbar.set_description('Epoch: {}; Loss: {:.8f}; Acc: {:.5f}'.format(epoch + 1, loss.item(), correct_counts / batches_done))
 
-    with open('log/log_{}.txt'.format(str(epoch + 1).zfill(2)), 'w') as w:
+    with open('log/log_{}_{}.txt'.format(lang,str(epoch + 1).zfill(2)), 'w') as w:
         w.write('{:.5f}\n'.format(correct_counts / total_counts))
 
     print('Validation Accuracy: {:.5f}'.format(correct_counts / total_counts))
     print('Validation Loss: {:.8f}'.format(running_loss / total_counts))
 
     dataset_object.close()
-
+    return correct_counts / batches_done
 
 if __name__ == '__main__':
     dataset_type = sys.argv[1]
@@ -131,10 +131,11 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=1e-4)
-
+    curr_val_acc = 0
     for epoch in range(n_epoch):
         train(epoch, dataset_type,lang=lang)
-        valid(epoch, dataset_type,lang=lang)
-
-        with open(f'checkpoint/checkpoint_{lang}.model'.format(str(epoch + 1).zfill(2)), 'wb') as f:
-            torch.save(net_running.state_dict(), f)
+        acc = valid(epoch, dataset_type,lang=lang)
+        if acc > curr_val_acc:
+                curr_val_acc=acc
+                with open(f'checkpoint/best_{lang}.model', 'wb') as f:
+                    torch.save(net_running.state_dict(), f)
