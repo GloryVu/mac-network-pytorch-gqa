@@ -23,8 +23,9 @@ def process_question(root, split, word_dic=None, answer_dic=None, dataset_type='
     if split == 'train':
         with open(f'/kaggle/input/multi-lingual-clevr/mini_CLEVR_{split}_questions_translated.json') as f:
             data = json.load(f)
-    with open(os.path.join(root, 'questions', f'mini_{dataset_type}_{split}_questions_translated.json'), encoding='utf-8') as f:
-        data = json.load(f)
+    else:
+        with open(os.path.join(root, 'questions', f'mini_{dataset_type}_{split}_questions_translated.json'), encoding='utf-8') as f:
+            data = json.load(f)
 
     result = []
     word_index = 1
