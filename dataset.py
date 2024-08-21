@@ -32,7 +32,7 @@ class CLEVR(Dataset):
         # self.transform = transform
         self.root = root
         self.split = split
-        with open(f'{root}/questions/mini_CLEVR_{split}_questions_translated.json') as f:
+        with open(f'/kaggle/input/multi-lingual-clevr/CLEVR/questions/mini_CLEVR_{split}_questions_translated.json') as f:
             data = json.load(f)
         self.img_idx_map = {}
         i=0
