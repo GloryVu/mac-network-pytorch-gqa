@@ -38,13 +38,13 @@ class CLEVR(Dataset):
         self.length = len(os.listdir(os.path.join(root,
                                                 'images', split)))
 
-        with open(f'mini_CLEVR_{split}_questions_translated.json') as f:
+        with open(f'mini_CLEVR_{split}_questions.json') as f:
             data = json.load(f)
         self.img_idx_map = {}
         i=0
         for question in data['questions']:
             if question['image_index'] not in self.img_idx_map.keys():
-                image_idx_map[question['image_index']] = i
+                self.img_idx_map[question['image_index']] = i
                 i+=1
         self.idx_img_map = {v:k for k,v in self.img_idx_map.items()}
 
@@ -52,7 +52,7 @@ class CLEVR(Dataset):
         img = os.path.join(self.root, 'images',
                         self.split,
                         'CLEVR_{}_{}.png'.format(self.split,
-                                            str(idx_img_map[index]).zfill(6)))
+                                            str(self.idx_img_map[index]).zfill(6)))
         img = Image.open(img).convert('RGB')
         return transform(img)
 

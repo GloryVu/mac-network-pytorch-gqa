@@ -21,7 +21,7 @@ def process_question(root, split, word_dic=None, answer_dic=None, dataset_type='
     if answer_dic is None:
         answer_dic = {}
 
-    with open(os.path.join(root, 'questions', f'mini_{dataset_type}_{split}_questions_translated.json'), encoding='utf-8') as f:
+    with open(os.path.join(root, 'questions', f'mini_{dataset_type}_{split}_questions.json'), encoding='utf-8') as f:
         data = json.load(f)
 
     result = []
