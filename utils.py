@@ -6,9 +6,9 @@ import pickle
 import sys
 
 import numpy as np
-import jieba
+# import jieba
 
-from gensim.models import KeyedVectors
+# from gensim.models import KeyedVectors
 id2word = []
 embedding_weights = None
 
@@ -26,7 +26,7 @@ def get_or_load_embeddings(lang='en'):
         return embedding_weights
 
     dataset_type = sys.argv[1]
-    with open(f'data/{dataset_type}_dic.pkl', 'rb') as f:
+    with open(f'data/{dataset_type}_{lang}_dic.pkl', 'rb') as f:
         dic = pickle.load(f)
 
     id2word = set(dic['word_dic'].keys())
@@ -40,7 +40,7 @@ def get_or_load_embeddings(lang='en'):
     embedding_weights = np.random.normal(0, scale=sd, size=[vocab_size, embed_size])
     embedding_weights = embedding_weights.astype(np.float32)
     if lang == 'en':
-        with open("/kaggle/input/phow2v/glove.6B.300d.txt", encoding="utf-8", mode="r") as textFile:
+        with open("data/glove.6B.300d.txt", encoding="utf-8", mode="r") as textFile:
             for line in textFile:
                 line = line.split()
                 word = line[0]

@@ -38,7 +38,7 @@ class CLEVR(Dataset):
         self.length = len(os.listdir(os.path.join(root,
                                                 'images', split)))
 
-        with open(f'mini_CLEVR_{split}_questions.json') as f:
+        with open(f'{root}/questions/CLEVR_{split}_questions.json') as f:
             data = json.load(f)
         self.img_idx_map = {}
         i=0
@@ -59,7 +59,7 @@ class CLEVR(Dataset):
     def __len__(self):
         return self.length
 
-batch_size = 50
+batch_size = 500
 
 resnet = resnet101(True).to(device)
 resnet.eval()
@@ -73,7 +73,7 @@ def create_dataset(split):
 
     print(split, 'total', size * batch_size)
 
-    f = h5py.File('data/CLEVR_features.hdf5'.format(split), 'w', libver='latest')
+    f = h5py.File('data/CLEVR_features_{}.hdf5'.format(split), 'w', libver='latest')
     dset = f.create_dataset('data', (size * batch_size, 1024, 14, 14),
                             dtype='f4')
 
@@ -89,4 +89,4 @@ def create_dataset(split):
     f.close()
 
 create_dataset('val')
-create_dataset('train')
+# create_dataset('train')

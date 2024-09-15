@@ -3,6 +3,7 @@ from torch.autograd import Variable
 from torch import nn
 from torch.nn.init import kaiming_uniform_, xavier_uniform_, normal
 import torch.nn.functional as F
+from utils import get_or_load_embeddings
 
 def linear(in_dim, out_dim, bias=True):
     lin = nn.Linear(in_dim, out_dim, bias=bias)
@@ -169,6 +170,7 @@ class MACNetwork(nn.Module):
         self.embed = nn.Embedding(n_vocab, embed_hidden)
         self.lstm = nn.LSTM(embed_hidden, dim,
                         batch_first=True, bidirectional=True)
+        # self.embed.weight.data = torch.Tensor(get_or_load_embeddings())
         self.lstm_proj = nn.Linear(dim * 2, dim)
 
         self.mac = MACUnit(dim, max_step,

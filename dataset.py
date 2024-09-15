@@ -13,13 +13,16 @@ from transforms import Scale
 
 class CLEVR(Dataset):
     def __init__(self, root, split='train', transform=None, lang='en'):
-        with open(f'data/CLEVR_{split}_{lang}.pkl', 'rb') as f:
-            self.data = pickle.load(f)
-
+        if split == 'train':
+            with open(f'data/CLEVR_{split}_{lang}_0.2.pkl', 'rb') as f:
+                self.data = pickle.load(f)
+        else:
+            with open(f'data/CLEVR_{split}_{lang}.pkl', 'rb') as f:
+                self.data = pickle.load(f)
         # self.transform = transform
         self.root = root
         self.split = split
-        with open(f'mini_CLEVR_{split}_questions_translated.json') as f:
+        with open(os.path.join('/home/cuongpv/vinhvq_workspace/CLEVR_v1.0','questions', f'CLEVR_{split}_questions.json'), encoding='utf-8') as f:
             data = json.load(f)
         self.img_idx_map = {}
         i=0
@@ -28,7 +31,7 @@ class CLEVR(Dataset):
                 self.img_idx_map[question['image_index']] = i
                 i+=1
         self.idx_img_map = {v:k for k,v in self.img_idx_map.items()}
-        self.h = h5py.File(f'data/CLEVR_features.hdf5'.format(split), 'r')
+        self.h = h5py.File('data/CLEVR_features_{}.hdf5'.format(split), 'r')
         self.img = self.h['data']
 
     def close(self):

@@ -9,10 +9,10 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from dataset import CLEVR, collate_data, transform, GQA
-from model_gqa import MACNetwork
+from model import MACNetwork
 
-batch_size = 128
-n_epoch = 25
+batch_size = 64
+n_epoch = 50
 dim_dict = {'CLEVR': 512,
             'gqa': 2048}
 
@@ -27,15 +27,13 @@ def accumulate(model1, model2, decay=0.999):
         par1[k].data.mul_(decay).add_(1 - decay, par2[k].data)
 
 
-def train(epoch, dataset_type, lang='en'):
-    if dataset_type == "CLEVR":
-        dataset_object = CLEVR('data/CLEVR', transform=transform, lang=lang)
-    else:
-        dataset_object = GQA('data/gqa', transform=transform)
+def train(epoch, dataset_type, train_set, lang='en'):
+    # if dataset_type == "CLEVR":
+    #     dataset_object = CLEVR('data/CLEVR','train', transform=transform, lang=lang)
+    # else:
+    #     dataset_object = GQA('data/gqa', transform=transform)
 
-    train_set = DataLoader(
-        dataset_object, batch_size=batch_size, num_workers=multiprocessing.cpu_count(), collate_fn=collate_data
-    )
+
 
     dataset = iter(train_set)
     pbar = tqdm(dataset)
@@ -66,18 +64,16 @@ def train(epoch, dataset_type, lang='en'):
 
         accumulate(net_running, net)
 
-    dataset_object.close()
+    # dataset_object.close()
 
 
-def valid(epoch, dataset_type,lang='en'):
-    if dataset_type == "CLEVR":
-        dataset_object = CLEVR('data/CLEVR', 'val', transform=None, lang=lang)
-    else:
-        dataset_object = GQA('data/gqa', 'val', transform=None)
+def valid(epoch, dataset_type, valid_set, lang='en'):
+    # if dataset_type == "CLEVR":
+    #     dataset_object = CLEVR('data/CLEVR', 'train', transform=None, lang=lang)
+    # else:
+    #     dataset_object = GQA('data/gqa', 'train', transform=None)
 
-    valid_set = DataLoader(
-        dataset_object, batch_size=4*batch_size, num_workers=multiprocessing.cpu_count(), collate_fn=collate_data
-    )
+
     dataset = iter(valid_set)
 
     net_running.train(False)
@@ -105,21 +101,29 @@ def valid(epoch, dataset_type,lang='en'):
                     correct_counts += 1
                 total_counts += 1
 
-            pbar.set_description('Epoch: {}; Loss: {:.8f}; Acc: {:.5f}'.format(epoch + 1, loss.item(), correct_counts / batches_done))
+            pbar.set_description('Epoch: {}; Loss: {:.8f}; Acc: {:.5f}'.format(epoch + 1, loss.item(), correct_counts / total_counts))
 
-    with open('log/log_{}.txt'.format(str(epoch + 1).zfill(2)), 'w') as w:
+    with open('log_0.2/log_{}.txt'.format(str(epoch + 1).zfill(2)), 'w') as w:
         w.write('{:.5f}\n'.format(correct_counts / total_counts))
 
     print('Validation Accuracy: {:.5f}'.format(correct_counts / total_counts))
-    print('Validation Loss: {:.8f}'.format(running_loss / total_counts))
+    print('Validation Loss: {:.8f}'.format(running_loss / batches_done))
 
-    dataset_object.close()
-
+    # dataset_object.close()
+    return correct_counts / total_counts
 
 if __name__ == '__main__':
     dataset_type = sys.argv[1]
     lang = sys.argv[2]
-    with open(f'data/{dataset_type}_dic.pkl', 'rb') as f:
+    train_dataset_object = CLEVR('data/CLEVR','train', transform=transform, lang=lang)
+    val_dataset_object = CLEVR('data/CLEVR','val', transform=transform, lang=lang)
+    train_set = DataLoader(
+        train_dataset_object, batch_size=batch_size, num_workers=multiprocessing.cpu_count(), collate_fn=collate_data
+    )
+    valid_set = DataLoader(
+        val_dataset_object, batch_size=batch_size, num_workers=multiprocessing.cpu_count(), collate_fn=collate_data
+    )
+    with open(f'data/{dataset_type}_{lang}_dic_0.2.pkl', 'rb') as f:
         dic = pickle.load(f)
 
     n_words = len(dic['word_dic']) + 1
@@ -132,9 +136,11 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=1e-4)
 
+    curr_val_acc = 0
     for epoch in range(n_epoch):
-        train(epoch, dataset_type,lang=lang)
-        valid(epoch, dataset_type,lang=lang)
-
-        with open(f'checkpoint/checkpoint_{lang}.model'.format(str(epoch + 1).zfill(2)), 'wb') as f:
-            torch.save(net_running.state_dict(), f)
+        train(epoch, dataset_type,train_set)
+        acc = valid(epoch,dataset_type, valid_set)
+        if acc > curr_val_acc:
+            curr_val_acc=acc
+            with open('checkpoint_0.2/best.model', 'wb') as f:
+                torch.save(net_running.state_dict(), f)
